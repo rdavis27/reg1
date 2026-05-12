@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 
@@ -39,6 +40,7 @@ REG_FILES = {
 }
 
 PARTIES = ["REP", "DEM", "Minor", "None"]
+PARTY_CHOICES = ["DEM", "REP", "Minor", "None"]
 DEFAULT_COLORS = "blue3,green3,gray60,red3"
 DEFAULT_SHAPES = "16,17,2,15"
 
@@ -70,6 +72,7 @@ def reg_file_path(year: int) -> Path:
     )
 
 
+@lru_cache(maxsize=None)
 def read_month(year: int, month: str) -> pd.DataFrame:
     df = pd.read_excel(reg_file_path(year), sheet_name=month, skiprows=3)
     df = df.iloc[:, :6].copy()
@@ -98,11 +101,50 @@ def parse_symbols(value: str) -> dict[str, str]:
 
 def selected_filename(input, suffix: str) -> str:
     change = "_change" if input.dochange() else ""
-    county = input.xcounty()
-    return f"reg_{county}{change}.{suffix}"
+    if input.plotbounties():
+        return f"reg_counties_{input.xparty()}{change}.{suffix}"
+    return f"reg_{input.xcounty()}{change}.{suffix}"
 
 
 def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
+    prefix1 = f"Change since {input.minyear()} in " if input.dochange() else ""
+    prefix2 = "Change in " if input.dochange() else ""
+    lcount = "Thousands of " if input.dothousands() else "Number of "
+
+    if input.plotbounties():
+        party = input.xparty()
+        plot_df = df[["COUNTY", "Date", party]].rename(columns={party: "Registered"}).copy()
+        if input.dothousands():
+            plot_df["Registered"] = plot_df["Registered"] / 1000
+
+        county_colors = (
+            px.colors.qualitative.Alphabet
+            + px.colors.qualitative.Dark24
+            + px.colors.qualitative.Light24
+            + px.colors.qualitative.Set3
+        )
+        title = f"Florida Counties - {prefix1}{lcount}{party} Registered Voters"
+        fig = px.line(
+            plot_df,
+            x="Date",
+            y="Registered",
+            color="COUNTY",
+            line_dash="COUNTY",
+            color_discrete_sequence=county_colors,
+            title=title,
+        )
+        fig.update_traces(line={"width": 1.7}, opacity=0.85)
+        fig.update_layout(
+            xaxis_title="Date",
+            yaxis_title=f"{prefix2}{lcount}{party} Registered Voters",
+            legend_title_text="COUNTY",
+            margin={"l": 60, "r": 20, "t": 70, "b": 60},
+            template="plotly_white",
+        )
+        if not interactive:
+            fig.update_layout(dragmode=False, showlegend=False)
+        return fig
+
     plot_df = df.melt(
         id_vars=["COUNTY", "Total", "YEAR", "MO", "Date"],
         value_vars=PARTIES,
@@ -112,9 +154,6 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
     if input.dothousands():
         plot_df["Registered"] = plot_df["Registered"] / 1000
 
-    prefix1 = f"Change since {input.minyear()} in " if input.dochange() else ""
-    prefix2 = "Change in " if input.dochange() else ""
-    lcount = "Thousands of " if input.dothousands() else "Number of "
     title = f"{input.xcounty()}, FL - {prefix1}{lcount}Registered Voters by Party"
 
     fig = px.line(
@@ -185,12 +224,14 @@ app_ui = ui.page_fluid(
         ui.div(
             ui.input_numeric("minyear", "Min Year", min=2017, max=2026, value=2017),
             ui.input_numeric("maxyear", "Max Year", min=2017, max=2026, value=2026),
-            ui.input_select("xcounty", "Search COUNTY", choices=["TOTALS"], selected="TOTALS"),
+            ui.input_select("xcounty", "COUNTY", choices=["TOTALS"], selected="TOTALS"),
+            ui.input_select("xparty", "PARTY", choices=PARTY_CHOICES, selected="DEM"),
             ui.input_text("xcolor", "Color", value=DEFAULT_COLORS),
             ui.input_text("xshape", "Shape", value=DEFAULT_SHAPES),
             ui.input_checkbox("dochange", "Calculate change", value=True),
+            ui.input_checkbox("plotbounties", "Plot counties", value=False),
             ui.input_checkbox("dothousands", "Thousands", value=True),
-            ui.input_numeric("dotsize", "Dot Size", value=2),
+            ui.input_numeric("dotsize", "Dot Size", value=8),
             ui.download_button("getcsv", "Get CSV"),
             ui.download_button("getexcel", "Get Excel"),
             class_="side-panel",
@@ -229,7 +270,10 @@ def server(input, output, session):
         for year in range(minyear, maxyear + 1):
             for month_num, month in enumerate(MONTHS, start=1):
                 month_df = read_month(year, month)
-                county_df = month_df[month_df["COUNTY"] == input.xcounty()].copy()
+                if input.plotbounties():
+                    county_df = month_df[month_df["COUNTY"] != "TOTALS"].copy()
+                else:
+                    county_df = month_df[month_df["COUNTY"] == input.xcounty()].copy()
                 if county_df.empty:
                     continue
                 county_df["YEAR"] = year
@@ -245,8 +289,12 @@ def server(input, output, session):
         )
 
         if input.dochange() and not df.empty:
-            first_values = df.loc[df.index[0], PARTIES]
-            df.loc[:, PARTIES] = df.loc[:, PARTIES].subtract(first_values, axis="columns")
+            if input.plotbounties():
+                first_values = df.groupby("COUNTY")[PARTIES].transform("first")
+                df.loc[:, PARTIES] = df.loc[:, PARTIES] - first_values
+            else:
+                first_values = df.loc[df.index[0], PARTIES]
+                df.loc[:, PARTIES] = df.loc[:, PARTIES].subtract(first_values, axis="columns")
 
         return df
 

@@ -231,6 +231,7 @@ app_ui = ui.page_fluid(
             ui.input_checkbox("dochange", "Calculate change", value=True),
             ui.input_checkbox("plotbounties", "Plot counties", value=False),
             ui.input_checkbox("dothousands", "Thousands", value=True),
+            ui.input_numeric("maxcounties", "Max counties", min=1, value=10),
             ui.input_numeric("dotsize", "Dot Size", value=8),
             ui.download_button("getcsv", "Get CSV"),
             ui.download_button("getexcel", "Get Excel"),
@@ -287,6 +288,16 @@ def server(input, output, session):
         df["Date"] = pd.to_datetime(
             {"year": df["YEAR"].astype(int), "month": df["MO"].astype(int), "day": 1}
         )
+
+        if input.plotbounties() and not df.empty:
+            max_counties = max(1, int(input.maxcounties()))
+            latest_date = df["Date"].max()
+            top_counties = (
+                df[df["Date"] == latest_date]
+                .sort_values("Total", ascending=False)
+                .head(max_counties)["COUNTY"]
+            )
+            df = df[df["COUNTY"].isin(top_counties)].copy()
 
         if input.dochange() and not df.empty:
             if input.plotbounties():

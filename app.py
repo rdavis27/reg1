@@ -136,10 +136,10 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
             y_title = f"{'Change in ' if input.dochange() else ''}{lcount}{party} Active Registered Voters"
 
         county_colors = (
-            px.colors.qualitative.Alphabet
-            + px.colors.qualitative.Dark24
+            px.colors.qualitative.Dark24
             + px.colors.qualitative.Light24
             + px.colors.qualitative.Set3
+            + px.colors.qualitative.Alphabet
         )
         title = f"Florida Counties - {title_metric}"
         fig = px.line(

@@ -41,8 +41,8 @@ REG_FILES = {
 
 PARTIES = ["REP", "DEM", "Minor", "None"]
 PARTY_CHOICES = ["DEM", "REP", "Minor", "None"]
-DEFAULT_COLORS = "blue3,green3,gray60,red3"
-DEFAULT_SHAPES = "16,17,2,15"
+DEFAULT_COLORS = "red3,blue3,green3,gray60"
+DEFAULT_SHAPES = "15,16,17,2"
 
 R_TO_PLOTLY_COLORS = {
     "blue3": "#0000CD",
@@ -82,6 +82,13 @@ def read_month(year: int, month: str) -> pd.DataFrame:
     return df
 
 
+def county_choices() -> list[str]:
+    try:
+        return read_month(2024, "January")["COUNTY"].tolist()
+    except Exception:
+        return ["TOTALS"]
+
+
 def parse_colors(value: str) -> dict[str, str]:
     colors = [R_TO_PLOTLY_COLORS.get(x.strip(), x.strip()) for x in value.split(",")]
     while len(colors) < len(PARTIES):
@@ -108,14 +115,25 @@ def selected_filename(input, suffix: str) -> str:
 
 def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
     prefix1 = f"Change since {input.minyear()} in " if input.dochange() else ""
-    prefix2 = "Change in " if input.dochange() else ""
+    percent = input.plotpercent()
     lcount = "Thousands of " if input.dothousands() else "Number of "
 
     if input.plotbounties():
         party = input.xparty()
         plot_df = df[["COUNTY", "Date", party]].rename(columns={party: "Registered"}).copy()
-        if input.dothousands():
+        if input.dothousands() and not percent:
             plot_df["Registered"] = plot_df["Registered"] / 1000
+
+        if percent:
+            if input.dochange():
+                title_metric = f"Percent Change since {input.minyear()} in {party} Active Registered Voters"
+                y_title = f"Percent Change in {party} Active Registered Voters"
+            else:
+                title_metric = f"{party} Active Registered Voter Percent"
+                y_title = f"Percent of Total Active Registered Voters that are {party}"
+        else:
+            title_metric = f"{prefix1}{lcount}{party} Active Registered Voters"
+            y_title = f"{'Change in ' if input.dochange() else ''}{lcount}{party} Active Registered Voters"
 
         county_colors = (
             px.colors.qualitative.Alphabet
@@ -123,7 +141,7 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
             + px.colors.qualitative.Light24
             + px.colors.qualitative.Set3
         )
-        title = f"Florida Counties - {prefix1}{lcount}{party} Registered Voters"
+        title = f"Florida Counties - {title_metric}"
         fig = px.line(
             plot_df,
             x="Date",
@@ -136,7 +154,7 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
         fig.update_traces(line={"width": 1.7}, opacity=0.85)
         fig.update_layout(
             xaxis_title="Date",
-            yaxis_title=f"{prefix2}{lcount}{party} Registered Voters",
+            yaxis_title=y_title,
             legend_title_text="COUNTY",
             margin={"l": 60, "r": 20, "t": 70, "b": 60},
             template="plotly_white",
@@ -151,10 +169,21 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
         var_name="Party",
         value_name="Registered",
     )
-    if input.dothousands():
+    if input.dothousands() and not percent:
         plot_df["Registered"] = plot_df["Registered"] / 1000
 
-    title = f"{input.xcounty()}, FL - {prefix1}{lcount}Registered Voters by Party"
+    if percent:
+        if input.dochange():
+            title_metric = f"Percent Change since {input.minyear()} in Active Registered Voters by Party"
+            y_title = "Percent Change in Active Registered Voters"
+        else:
+            title_metric = "Active Registered Voter Percent by Party"
+            y_title = "Percent of Total Active Registered Voters"
+    else:
+        title_metric = f"{prefix1}{lcount}Active Registered Voters by Party"
+        y_title = f"{'Change in ' if input.dochange() else ''}{lcount}Active Registered Voters"
+
+    title = f"{input.xcounty()}, FL - {title_metric}"
 
     fig = px.line(
         plot_df,
@@ -170,7 +199,7 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
     fig.update_traces(marker={"size": input.dotsize(), "opacity": 0.7}, line={"width": 2})
     fig.update_layout(
         xaxis_title="Date",
-        yaxis_title=f"{prefix2}{lcount}Registered Voters",
+        yaxis_title=y_title,
         legend_title_text="Party",
         margin={"l": 60, "r": 20, "t": 70, "b": 60},
         template="plotly_white",
@@ -208,6 +237,17 @@ app_ui = ui.page_fluid(
             width: 100%;
         }
 
+        .county-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: -8px 0 12px;
+        }
+
+        .county-nav .btn {
+            width: 100%;
+        }
+
         .main-panel {
             min-width: 0;
         }
@@ -225,14 +265,20 @@ app_ui = ui.page_fluid(
             ui.input_numeric("minyear", "Min Year", min=2017, max=2026, value=2017),
             ui.input_numeric("maxyear", "Max Year", min=2017, max=2026, value=2026),
             ui.input_select("xcounty", "COUNTY", choices=["TOTALS"], selected="TOTALS"),
+            ui.div(
+                ui.input_action_button("county_up", "▲", title="Previous county"),
+                ui.input_action_button("county_down", "▼", title="Next county"),
+                class_="county-nav",
+            ),
             ui.input_select("xparty", "PARTY", choices=PARTY_CHOICES, selected="DEM"),
-            ui.input_text("xcolor", "Color", value=DEFAULT_COLORS),
-            ui.input_text("xshape", "Shape", value=DEFAULT_SHAPES),
             ui.input_checkbox("dochange", "Calculate change", value=True),
             ui.input_checkbox("plotbounties", "Plot counties", value=False),
+            ui.input_checkbox("plotpercent", "Plot percent", value=False),
             ui.input_checkbox("dothousands", "Thousands", value=True),
             ui.input_numeric("maxcounties", "Max counties", min=1, value=10),
             ui.input_numeric("dotsize", "Dot Size", value=8),
+            ui.input_text("xcolor", "Color", value=DEFAULT_COLORS),
+            ui.input_text("xshape", "Shape", value=DEFAULT_SHAPES),
             ui.download_button("getcsv", "Get CSV"),
             ui.download_button("getexcel", "Get Excel"),
             class_="side-panel",
@@ -254,11 +300,25 @@ app_ui = ui.page_fluid(
 def server(input, output, session):
     @reactive.effect
     def _populate_counties():
-        try:
-            counties = read_month(2024, "January")["COUNTY"].tolist()
-        except Exception:
-            counties = ["TOTALS"]
-        ui.update_select("xcounty", choices=counties, selected="TOTALS", session=session)
+        ui.update_select("xcounty", choices=county_choices(), selected="TOTALS", session=session)
+
+    def move_county(step: int) -> None:
+        counties = county_choices()
+        if not counties:
+            return
+        current = input.xcounty()
+        index = counties.index(current) if current in counties else 0
+        ui.update_select("xcounty", selected=counties[(index + step) % len(counties)], session=session)
+
+    @reactive.effect
+    @reactive.event(input.county_up)
+    def _county_up():
+        move_county(-1)
+
+    @reactive.effect
+    @reactive.event(input.county_down)
+    def _county_down():
+        move_county(1)
 
     @reactive.calc
     def get_data() -> pd.DataFrame:
@@ -299,13 +359,20 @@ def server(input, output, session):
             )
             df = df[df["COUNTY"].isin(top_counties)].copy()
 
+        if input.plotpercent() and not input.dochange() and not df.empty:
+            df[PARTIES] = df[PARTIES].astype(float)
+            df[PARTIES] = df[PARTIES].div(df["Total"], axis="index") * 100
+
         if input.dochange() and not df.empty:
+            df[PARTIES] = df[PARTIES].astype(float)
             if input.plotbounties():
                 first_values = df.groupby("COUNTY")[PARTIES].transform("first")
-                df.loc[:, PARTIES] = df.loc[:, PARTIES] - first_values
             else:
                 first_values = df.loc[df.index[0], PARTIES]
-                df.loc[:, PARTIES] = df.loc[:, PARTIES].subtract(first_values, axis="columns")
+            if input.plotpercent():
+                df[PARTIES] = (df[PARTIES].div(first_values, axis="columns") - 1) * 100
+            else:
+                df[PARTIES] = df[PARTIES].subtract(first_values, axis="columns")
 
         return df
 

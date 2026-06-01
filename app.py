@@ -150,6 +150,7 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
             line_dash="COUNTY",
             color_discrete_sequence=county_colors,
             title=title,
+            height = input.height()
         )
         fig.update_traces(line={"width": 1.7}, opacity=0.85)
         fig.update_layout(
@@ -195,6 +196,7 @@ def make_plot(df: pd.DataFrame, input, *, interactive: bool = True):
         color_discrete_map=parse_colors(input.xcolor()),
         symbol_map=parse_symbols(input.xshape()),
         title=title,
+        height = input.height()
     )
     fig.update_traces(marker={"size": input.dotsize(), "opacity": 0.7}, line={"width": 2})
     fig.update_layout(
@@ -276,6 +278,7 @@ app_ui = ui.page_fluid(
             ui.input_checkbox("plotpercent", "Plot percent", value=False),
             ui.input_checkbox("dothousands", "Thousands", value=True),
             ui.input_numeric("maxcounties", "Max counties", min=1, value=10),
+            ui.input_numeric("height", "Height", value=600),
             ui.input_numeric("dotsize", "Dot Size", value=8),
             ui.input_text("xcolor", "Color", value=DEFAULT_COLORS),
             ui.input_text("xshape", "Shape", value=DEFAULT_SHAPES),

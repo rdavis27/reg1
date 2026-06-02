@@ -1,0 +1,181 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+
+<title>Registered Voters in Florida: 2017-2026</title>
+</head>
+<body>
+<!-- <script type="text/javascript" src="header.js"></script> -->
+<!--------------------------------------------------------------------------------------------------------------->
+<font color="red"><h1>Registered Voters in Florida: 2017-2026</h1></font>
+<p>
+<a href="#reg"><font color="red"><b>Active Registered Voters in Florida</b></font></a><br>
+<a href="#app"><font color="red"><b>App for Viewing Florida Registration</b></font></a><br>
+<a href="#1county"><font color="red"><b>Viewing a Single County</b></font></a><br>
+<a href="#1party"><font color="red"><b>Viewing a Single Party in Multiple Counties</b></font></a><br>
+<a href="#arrows"><font color="red"><b>Viewing Multiple Counties via the Arrow Keys</b></font></a><br>
+<a href="#percent"><font color="red"><b>Viewing Counties with the 'Plot percent' Option</b></font></a><br>
+<p>
+<a name="reg"><font color="red"><h2>Active Registered Voters in Florida</h2></font></a>
+<p>
+On July 29,2025, an article was posted on the Florida Politics website titled <A HREF="https://floridapolitics.com/archives/749373-miami-dade-dems-accuse-elections-supervisor-of-pro-gop-bias-trying-to-steal-local-elections/">"Miami-Dade Dems accuse Elections Supervisor of pro-GOP bias, trying to 'steal' local elections"</A>.  The article begins:
+<p><b>
+Leaders of the Miami-Dade Democratic Party are accusing recently elected Supervisor of Elections Alina Garcia, a longtime Republican operative and former state lawmaker, of using her new post to tilt the county's voter composition in her party's favor.
+<p>
+They're now diving into public records, they say, to determine whether - and to what extent - the Supervisor of Elections (SOE) Office has manipulated voter rolls since November.
+</b><p>
+Further on, the article states the following numbers:
+<p><b>
+A side-by-side comparison of active voter numbers from February and those from July, after an <A HREF="https://floridapolitics.com/archives/738910-no-republican-voters-technically-dont-outnumber-democrats-in-miami-dade-yet/">off-year voter roll maintenance</A> that occurred statewide, shows Miami-Dade shed a 106,435 Democratic and 105,183 NPA voters - 41% each of the net total 259,606-voter reduction - while removing just 47,988 Republicans (18% of the total) over the same period.
+</b><p>
+These numbers are contained in the following table taken from the article:
+<pre>
+82% of Purged Voters are Dems and NPAs
+
+Purged Voters  Voters 2/25  Voters 7/25  Net Loss  % of Total
+-------------  -----------  -----------  --------  ----------
+    Dems         523,040       416,605    106,435     41%
+    NPAs         495,340       390,157    105,183     41%
+    Reps         498,520       450,532     47,988     18%
+    Total       1516,900     1,257,294    259,606    100%
+    
+Stats from S.O.E. website published 7/2/25
+</pre>
+<p>
+<a name="app"><font color="red"><h2>App for Viewing Florida Registration</h2></font></a>
+<p>
+The numbers given can be verified via an online app at <A HREF="https://econdata.shinyapps.io/reg11/">https://econdata.shinyapps.io/reg11/</A>.  Going to that URL will bring up the following page:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_totals_change.png" width="1200" alt="Click to enlarge">
+<p>
+The above plot shows the change in the number of active registered voters in Florida since 2017.  As can be seen, the change in the number of Republican and Democratic voters since 2017 remained similar until mid-2020, just before the 2020 General Election.  Since then, the number of Republican active registered voters have increased modestly while the number of Democratic active registered voters has declined sharply.
+<p>
+Unchecking the 'Calculate change' checkbox will now result in the following plot:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_totals_actual.png" width="1200" alt="">
+<p>
+The above plot is showing the actual number of active registered voters.  As can be seen, there were slightly more Democratic than Republican voters until 2021.  However, in October of 2021, the number of Republican voters surpassed the number of Democratic voters with the former continuing to increase while the latter declined.
+<p>
+<a name="1county"><font color="red"><h2>Viewing a Single County</h2></font></a>
+<p>
+Changing the COUNTY select list to MIAMI-DADE, rechecking the 'Calculate change' checkbox, and hovering the cursor over the rightmost point in the blue line will now result in the following plot:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_miami_change.png" width="1200" alt="">
+<p>
+Here again the plot shows that the change in the number of Republican and Democratic voters since 2017 remained similar until mid-2020 after which the former increased modestly while the latter declined sharply.  However, it also shows a sharp decline in the Republican, Democratic, and No-party voters in April of 2025.  Republican voters dropped back to about the level that they were at in June of 2024 where as Democratic and No-party voters dropped by a much larger amount to levels well below where they were in 2017.
+<p>
+Unchecking the 'Calculate change' checkbox will now result in the following plot: 
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_miami_actual.png" width="1200" alt="">
+<p>
+The above plot shows that there were more Democratic than Republican active registered voters before the April 2025 voter purge but that there were fewer afterwards.  Changing 'Min Year' to 2023 and clicking the Data tab will now display the following table: 
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_miami_actual_data.png" width="1200" alt="">
+<p>
+The table displays the actual numbers from the prior plot since 2023.  All of the numbers in this table and prior plots comes from files linked to on <A HREF="https://dos.fl.gov/elections/data-statistics/voter-registration-statistics/voter-registration-reports/">this Florida Division of Elections (DOE) page</A>.  There is a slight difference between the numbers given in the articles and those given on the current DOE page.  The difference is generally less than one percent and is likely due to revisions over the past year or that the articles are using a different source.  The table from the article gives an S.O.E. website published 7/2/25 as the source.  S.O.E. stands for 'Supervisor of Elections' and its initial page appears to be at <A HREF="https://www.myfloridaelections.com/">https://www.myfloridaelections.com/</A>.  The following table compares the "old" values (from the articles) to the "new" values (from the DOE site).
+<pre>
+Comparison of "old" values from the article with "new" values from the Florida Division of Elections (DOE) web site
+
+       Voters 2/25                             Voters 7/25                             Net Loss                              % of Total      
+Party      old      new  old-new       % diff      old      new  old-new       % diff     old     new  old-new       % diff  old    old(exact)    new(exact)
+-----  -------  -------  -------  -----------  -------  -------  -------  -----------  ------  ------  -------  -----------  ---  ------------  ------------                                               
+Dems    523040   518190     4850  0.927271337   416605   414094     2511  0.602729204  106435  104096     2339  2.197585381   41   40.99866721   40.77782479
+NPAs    495340   493329     2011  0.405983769   390157   389316      841  0.215554251  105183  104013     1170  1.112347052   41   40.51639793   40.74531096
+Reps    498520   496859     1661  0.333186231   450532   449692      840  0.186446246   47988   47167      821  1.710844378   18   18.48493486   18.47686426
+Total  1516900  1508378     8522  0.561803679  1257294  1253102     4192  0.33341446   259606  255276     4330  1.667912144  100  100           100
+</pre>
+As can be seen, the voter registration numbers differ by less than a percent.  This comparison is shown here chiefly to avoid any confusion over the small difference in values.  In fact, the "new" values from the DOE site and displayed by this app appear to be identical to an existing app at <A HREF="https://www.neurelect.com/counties/dad">https://www.neurelect.com/counties/dad</A>.
+<p>
+Getting back to the switch of the party with the most active registered voters from Democratic to Republican in Miami, it should be noted that this switch occurred in the number of <i>active</i> registered voters.  As the article at <A HREF="https://floridapolitics.com/archives/738910-no-republican-voters-technically-dont-outnumber-democrats-in-miami-dade-yet/">this link</a> stated "registered Democrats still lead Republicans in Florida's most populous county by nearly 41,000 voters overall - 555,524 to 514,538."  That article contains the following table:
+<pre>
+Party    Active   Inactive     Total   % Active  % Inactive
+-----  ---------  --------  ---------  --------  ----------
+REP      449,337    65,201    514,538    87.33      12.67
+DEM      414,680   140,844    555,524    74.65      25.35
+NPA      417,144   145,823    562,967    74.10      25.90
+Total  1,281,161   351,868  1,633,029    78.45      21.55
+</pre>
+I have not been able to find an online source for the number of <i>inactive</i> registered voters in any county in Florida.  Still, the table suggests that the majority of registered voters tend to be active.  The last two columns were added and show that the percent of Republican, Democratic, and No Party registered voters who were inactive in mid-May of 2025 were about 13, 25, and 26 percent, respectively. reg11
+<p>
+<a name="1party"><font color="red"><h2>Viewing a Single Party in Multiple Counties</h2></font></a>
+<p>
+Rather than viewing all parties for a single county, it's possible to view multiple counties for a single party by setting the 'Plot counties' checkbox.  Starting again at the  <A HREF="https://econdata.shinyapps.io/reg11/">initial page</A>, ensuring that the PARTY select list is set to DEM and setting the 'Plot counties' checkbox, and hovering the cursor over the rightmost point in the black line will result in the following plot:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_dem10_change.png" width="1200" alt="">
+<p>
+This plot shows the number of DEM ARVs (active registered voters) for the 10 Florida counties with the most total ARVs.  As can be seen, the number of active registered DEM voters in Miami-Dade has dropped about 186,427 since 2017.  Hovering over the points at the bottom of the drops in voters show that large drops occurred in Miami-Dade County in May of 2025, in Hillsborough, Pinellas, and Polk Counties a month earlier in April of 2025, in Broward County in December of 2023 and December of 2025, and in a number of other times and places.
+<p>
+Unchecking the 'Calculate change' checkbox will now result in the following plot:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_dem10_actual.png" width="1200" alt="">
+<p>
+This plot shows that DEM ARVs rose together from about 600 thousand in 2017 to about 635 thousand in November of 2020 and then began a gradual decline.  That decline was not in sync as the two counties seem to have voter roll purges at differing times.  Most of the other counties followed the same pattern of peaking around the time of the 2020 General election and steadily declining since then.
+<p>
+<a name="arrows"><font color="red"><h2>Viewing Multiple Counties via the Arrow Keys</h2></font></a>
+<p>
+Another way to quickly view and compare multiple counties is with the up and down arrow keys under the COUNTY select list.  Starting at the  <A HREF="https://econdata.shinyapps.io/reg11/">initial page</A>, setting COUNTY to LAFAYETTE, and unchecking the 'Calculate change' checkbox will result in the following plot:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_lafayette_actual.png" width="1200" alt="">
+<p>
+This plot shows that the party with the most ARVs (active registered voters) in Lafayette County switch from Democratic to Republican in September of 2019.  Like Miami, the numbers for both parties dropped in apparent voter roll purges in December of 2023 and June of 2025.  It is odd, however, is how the two parties seemed to mirror each other up until the first purge in December of 2023.  Especially odd is June 2020 when the number of DEM ARVs declined by 333 as the number of REP ARVs increased by 381.  The drop of 333 DEM ARVs would seem to indicate a purge but this is contradicted by the rise of 381 REP ARVs.  The most likely benign explanation that I can think of is that 300-plus voters suddenly decided to switch parties that month.  This could likely be verified by examining the voter rolls for that month. 
+<p>
+Pressing the down arrow 5 times will display the plot for Liberty County below:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_liberty_actual.png" width="1200" alt="">
+<p>
+The number of Democratic and Republican ARVs likewise seem to mirror each other in this plot, up to the drop in DEM ARVs in April of 2025.  Changing COUNTY now to UNION will display the plot for Union County below:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_union_actual.png" width="1200" alt="">
+<p>
+The number of Democratic and Republican ARVs likewise seem to mirror each other in this plot, up to the drop in DEM ARVs in April of 2024.  This mirroring effect seems to be visible only in relatively small counties.  However, the switching of the party with the most ARVs (active registered voters) can be seen in other populous counties such as in Hillsborough County below:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_hillsborough_actual.png" width="1200" alt="">
+<p>
+<a name="percent"><font color="red"><h2>Viewing Counties with the 'Plot percent' Option</h2></font></a>
+<p>
+By default, the y-axis will show the change in ARVs (active registered voters) or the number of ARVs as a count.  If the 'Plot percent' checkbox is selected, however, the y-axis will show these values as a percent.  Starting at the  <A HREF="https://econdata.shinyapps.io/reg11/">initial page</A> amd setting COUNTY to BROWARD will result in the following plot:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_broward_change.png" width="1200" alt="">
+<p>
+In the above plot, it can be seen that the DEM ARVs decrease more than the REP ARVs in each of the purges in May of 2022, December of 2023, and December of 2025 in Broward County.  However, there are many more DEM ARVs in that county so the comparison may be misleading.  Selecting the 'Plot percent' checkbox will change the plot as follows:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_broward_change_percent.png" width="1200" alt="">
+<p>
+This plot now shows the change in the ARVs as a percent of the level in 2017.  As a percent, it appears that the DEM and REP ARVs drop by about the same amount during the purges except for the second purge (December of 2023) when the DEM ARVs look to drop a bit more.  However, the No-party ARVs appear to have dropped much more of a percentage in that purge and the next one in December of 2025.
+<p>
+Unchecking the 'Calculate change' checbox now will change the plot as follows:
+<p>
+<img src="http://econdataus.com/elections/fl_reg_17_26_broward_actual_percent.png" width="1200" alt="">
+<p>
+First, it should be noted that the value of the points now equal the percent of the total (100 percent) that each ARV equals.  For this reason and the fact that all of the parties dropped by about the same percentage during the first purge in May of 2022, that first purge is not visible in the plot.  That is, since each party fell by the same percentage, they all continued to comprise the same percentage of the total as before.  However, the second and third purges are visible as the No-party ARV going down by about the same percentage as the Republican party went up.  This would occur if a significant number of ARVs switched from No-party to Republican in the same month of the purge.  This would seem highly coicidental so it seems likely that the explanation is something else.
+
+<!--
+https://reports.voterpurgeproject.org/state/FL
+
+https://www.arcgis.com/apps/dashboards/7ae61abe4d7c45ecb2cac37608da43c8
+
+https://www.neurelect.com/counties/dad
+
+<img src="http://econdataus.com/elections/fl_reg_17_26_miami_actual_data.png" width="1200" alt="">
+<p>
+
+<a href="https://econdataus.com/elections/fl_reg_17_26_miami_actual.png" target="_blank">
+    <img src="https://econdataus.com/elections/fl_reg_17_26_miami_actual.png"
+         width="400"
+         alt="Miami registration chart">
+</a>
+-->
+
+<hr>
+<A HREF="https://econdataus.com/election24.htm">2024 U.S. Election</A>
+<p>
+<script type="text/javascript" src="footer.js"></script>
+<noscript><div class="statcounter"><a title="free web stats"
+href="http://statcounter.com/" target="_blank"><img
+class="statcounter"
+src="//c.statcounter.com/8657157/0/2dd97572/1/" alt="free
+web stats"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+</body>
+</html>
